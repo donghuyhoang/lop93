@@ -1,9 +1,14 @@
 <html>
-  <title>Pentest
-  </title>
-<body>
-<?php
-echo "Dong Huy Hoang Pentester";
-?>
+  <body>
+  <?php
+    if($_POST["user"] == "user" and $_POST["password"] == "password"){
+echo "Access Succes";
+    }else{
+echo "NO Can Access";
+    }
+    
+    
+    ?>
+  
   </body>
 </html>
