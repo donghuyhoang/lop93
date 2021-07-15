@@ -7,6 +7,5 @@ echo "Access Succes";
 echo "NO Can Access";
     }echo 
     ?>
-  
   </body>
 </html>
