@@ -5,9 +5,7 @@
 echo "Access Succes";
     }else{
 echo "NO Can Access";
-    }
-    
-    
+    }echo 
     ?>
   
   </body>
