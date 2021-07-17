@@ -1,32 +1,295 @@
-<html>
-  <title>
-    Pentester
-  </title>
-  <style>
-    body{
-      background-color:lightblue;
-    }
-  </style>
-  <center>
-  <body>
-    <h3>Dong Huy Hoang Hydra</h3>
-  <form action=" ">
-    User:<input type="text" name="user">
-    <br> <br>
-    Password:<input type="text" name="password">
-    <br> <br>
-    <input type="submit" name="submit" value="Login">
-    </center>
-    <script language=JavaScript>{
-    <script>
-var user = "donghuyhoang";
-var password = "pentester";
-     if(user == user and password == password){
-       console.log("Access Suress");
-     }else{
-       alert('Try again');
-     }
-    </script>
-    }
-    </body>
-</html>
+Skip to content
+freehost.page
+
+Home
+Free CDN
+Free tools
+HTML
+CSS
+JS
+PHP
+SQL
+Tạo Form đăng ký bằng JavaScript và thẻ input
+October 19, 2013
+Làm form bằng HTML và chỉnh sửa lại giao diện cho đẹp với CSS không khó, bạn chỉ cần nhớ mấy cái input type là OK.
+
+Mục lục  ẩn 
+1 Thẻ mở Form
+2 Thẻ input
+3 Lấy dữ liệu từ input
+4 Không được bỏ trống dữ liệu:
+5 Kiểm tra Email hợp chuẩn
+Vấn đề nằm ở Validate, tức là chuẩn hóa dữ liệu nhập vào và một số yêu cầu khác nữa. HTML5 làm form cũng rất tốt, nhưng có hạn chế là chưa được hỗ trợ rộng rãi và thống nhất giữa các trình duyệt, do vậy chúng ta vẫn phải cậy nhờ khá nhiều vào Javascript.
+
+Về sau bạn sẽ biết ngoài việc bắt lỗi dữ liệu tại máy khách thì chúng ta còn phải kiểm tra dữ liệu một lần nữa tại Server cho chắc ăn bằng một ngôn ngữ lập trình web kiểu như PHP hoặc ASP.Net…
+
+Nhưng đấy là về sau! Hiện tại chúng ta chỉ quan tâm tới Javascript thôi nhé.
+
+Có vẻ chém gió hơi nhiều, giờ sẽ vào đề ngay. Chẳng hạn tôi có Form phải bắt lỗi trong các trường hợp sau:
+
+Người dùng không nhập dữ liệu;
+Người dùng không nhập đúng chuẩn email dạng aaa@bbb.ccc;
+Người dùng nhập chữ vào Số điện thoại hoặc nhập hơn 11 số;
+Người dùng nhập chữ vào Số lượng mua, hoặc con số nhỏ hơn hoặc bằng 0, hoặc lớn hơn hoặc bằng 100;
+Ngày nhận hàng không hợp chuẩn;
+Người dùng không chọn bất cứ hình thức thanh toán nào;
+Thực tế là tôi đã viết code Javascript cho Form trên rồi, giờ bạn nhấn nút Đăng Ký Mua là biết liền, và thử xem nó có bắt lỗi đúng như yêu cầu không. Code mẫu:
+
+<script type="text/javascript">
+
+// JavaScript Document
+function validateForm() {
+//Họ phải được điền
+var ho = document.forms["myForm"]["ho"].value;
+if (ho == "") {
+alert("Họ không được để trống");
+return false;
+}
+
+//Tên phải được điền
+var ten = document.forms["myForm"]["ten"].value;
+if (ten == "") {
+alert("Tên không được để trống");
+return false;
+}
+
+//Email phải được điền chính xác
+var email=document.forms["myForm"]["email"].value;
+var aCong=email.indexOf("@");
+var dauCham = email.lastIndexOf(".");
+if (email == "") {
+alert("Email không được để trống");
+return false;
+}
+else if ((aCong<1) || (dauCham<aCong+2) || (dauCham+2>email.length)) {
+alert("Email bạn điền không chính xác");
+return false;
+}
+//Nhập số điện thoại
+var dienThoai = document.forms["myForm"]["dienThoai"].value;
+var kiemTraDT = isNaN(dienThoai);
+if (dienThoai == "") {
+alert("Điện thoại không được để trống");
+return false;
+}
+if (kiemTraDT == true) {
+alert("Điện thoại phải để ở định dạng số");
+return false;
+}
+//Nhập số lượng muốn mua
+var soLuong = document.forms["myForm"]["soLuong"].value;
+var kiemTraSL = isNaN(soLuong);
+if ((soLuong == "") || (soLuong <= 0)) {
+alert("Số lượng không được để trống và phải lớn hơn 0");
+return false;
+}
+if (soLuong > 100) {
+alert("Số lượng mua không được lớn hơn 100");
+return false;
+}
+if (kiemTraSL == true) {
+alert("Số lượng mua phải để ở định dạng số");
+return false;
+}
+//Chọn ngày nhận hàng
+var nm = document.forms["myForm"]["ngaymua"].value;
+if (nm == "") {
+alert("Ngày không được để trống");
+return false;
+}
+//Chọn kiểu thanh toán
+var ck = document.getElementById("ck");
+var tt = document.getElementById("tt");
+if ((ck.checked == false) && (tt.checked == false)) {
+alert("Bạn phải chọn một kiểu thanh toán");
+return false;
+}
+}
+</script><br />
+<form action="#" method="post" name="myForm" onsubmit="return validateForm()">
+<table bgcolor="#DDDDDD" id="formdangky" style="width: 450px;">
+<tbody>
+<tr>
+<td class="tenhang" width="118">Họ:</td>
+<td width="320"><input name="ho" type="text" /></td>
+</tr>
+<tr>
+<td class="tenhang">Tên:</td>
+<td><input name="ten" type="text" /></td>
+</tr>
+<tr>
+<td class="tenhang">Email:</td>
+<td><input name="email" type="text" /></td>
+</tr>
+<tr>
+<td class="tenhang">Số Điện Thoại:</td>
+<td><input maxlength="11/" name="dienThoai" type="text" /></td>
+</tr>
+<tr>
+<td class="tenhang">Số Lượng Mua:</td>
+<td><input name="soLuong" type="text" /></td>
+</tr>
+<tr>
+<td class="tenhang">Ngày Nhận Hàng:</td>
+<td><input id="datepicker" name="ngaymua" type="text" /></td>
+</tr>
+<tr>
+<td class="tenhang">Thanh Toán:</td>
+<td><input id="ck" name="thanhToan" type="radio" value="chuyenKhoan" /> Chuyển Khoản
+<input id="tt" name="thanhToan" type="radio" value="trucTiep" /> Trực Tiếp Khi Giao Hàng
+</td>
+</tr>
+<tr>
+<td><input name="Submit" type="submit" value="Đăng Ký Mua" /></td>
+<td><input name="Reset" type="reset" value="Xóa" /></td>
+</tr>
+</tbody></table>
+</form>
+Bây giờ tôi sẽ giải thích code.
+
+Thẻ mở Form
+<form name="myForm" action="#" onsubmit="return validateForm()" method="post">
+2 cái action=”#” và method=”post” được dùng cho việc gửi dữ liệu lên máy chủ server nên hiện bạn không cần phải quan tâm, chúng ta chỉ cần để ý đến tên của Form ở thuộc tính name=”myForm” và nơi xử lý dữ liệu qua onsubmit="return validateForm()"
+validateForm() chính là tên hàm mà trong đó ta xây dựng code Javascript để bắt lỗi. Ta để onsubmit có nghĩa là, khi người dùng nhấn nút submit thì dữ liệu được chuyển đến hàm validateForm()
+
+Thẻ input
+Một thẻ input mẫu trong bài trên có dạng như này: 
+
+<input name="ten" type="text" />
+Tôi sử dụng type là text, 6 trường đầu tiên tôi sử dụng type này, trường Thanh toán là type radio, nút Đăng Ký Mua là type submit, nút Xóa là type reset.Điều quan trọng trong thẻ input chính là name của nó. Chính thông qua name của Form và của Input mà Javascript lấy được dữ liệu nhập vào.
+
+Lấy dữ liệu từ input
+Đoạn code mẫu để lấy dữ liệu từ thẻ input: 
+
+var ten = document.forms["myForm"]["ten"].value;
+Như đoạn code trên có nghĩa là bạn lấy giá trị của thẻ input có tên là “ten” trong Form có tên là “myForm” và gán giá trị lấy được này vào biến var ten
+
+Tương tự cho email: 
+
+var email=document.forms["myForm"]["email"].value;
+Không được bỏ trống dữ liệu:
+var ten = document.forms["myForm"]["ten"].value;
+if (ten == "") {
+alert("Tên không được để trống");
+return false;
+}
+Theo đó, sau khi lấy được dữ liệu từ thẻ input và gán vào biên ten, chương trình dùng hàm if để kiểm tra ten có rỗng hay không – if(ten==""). Nếu thỏa mãn điều kiện rỗng sẽ có hộp thông báo “Tên không được để trống” và ta dùng hàm alert để điều khiển tác vụ này, cuối cùng return false.
+
+Kiểm tra dữ liệu nhập vào có phải là số không
+var dienThoai = document.forms["myForm"]["dienThoai"].value;
+var kiemTraDT = isNaN(dienThoai);
+if (kiemTraDT == true) {
+alert("Điện thoại phải để ở định dạng số");
+return false;
+}
+Hàm dùng để kiểm tra số đó là isNaN – viết tắt của is Not a Number. Nếu isNaN trả về giá trị TRUE nghĩa là đó không phải là một số.
+
+Kiểm tra Email hợp chuẩn
+Có lẽ với đa số mọi người thì đây là code phức tạp nhất (với tôi cũng thế). Địa chỉ email chính xác phải thỏa mãn điều kiện sau:
+
+Phải có ký tự @;
+Trước @ phải có ít nhất 1 ký tự;
+Phải có ít nhất 1 dấu chấm trong email;
+Phải có ít nhất 1 ký tự đứng giữa @ và dấu chấm;
+Dấu chấm không được đứng ở vị trí cuối cùng;
+Code mẫu:
+
+var email=document.forms["myForm"]["email"].value;
+var aCong=email.indexOf("@");
+var dauCham = email.lastIndexOf(".");if (email == "") {
+alert("Email không được để trống");
+return false;
+}else if ((aCong<1) || (dauCham<aCong+2) || (dauCham+2>email.length)) {
+alert("Email bạn điền không chính xác");
+return false;
+}
+Chúng ta cần chú ý đến lệnh indexOf, nó sẽ xác định số ký tự đứng trước nó tính từ trái sang. Ví dụ, email ab@xy.com có giá trị email.indexOf("@") là 2 vì có 2 ký tự là a và b đứng trước @email.indexOf(".") có giá trị là 5 vì có 5 ký tự đứng trước dấu . là a, b, @, x, y;
+
+Nếu không có ký tự cần tìm trong chuỗi, hàm indexOf sẽ trả về -1.
+
+ 
+Đến đây bạn tự hỏi email.lastIndexOf(".") có ý nghĩa gì. Hết sức chú ý chữ last. Lệnh này cũng là xác định số ký tự đứng trước dấu chấm nhưng là dấu chấm cuối cùng.
+
+Chẳng hạn email xyz.com@gmail.com, thế thì dấu chấm cuối cùng là dấu chấm sau chữ gmail chứ không phải sau chữ xyz.
+
+Giờ chúng ta cùng tìm hiểu ý nghĩa code:
+
+var aCong=email.indexOf("@");if (aCong<1)
+Chỉ có 2 trường hợp xảy ra khi aCong<1:
+
+Không có @ trong địa chỉ email, lúc này email.indexOf("@") = -1
+aCong = 0, nghĩa là không có ký tự nào đứng trước @, hay email nhập vào có dạng @klm.com – tức là không hợp chuẩn
+Vậy là với câu lệnh trên ta đã ép dữ liệu phải có @, và trước @ phải có ký tự
+Sau @ phải có ít nhất 1 ký tự sau đó mới đến dấu chấm do đó, email hợp chuẩn thì số ký tự đứng trước dấu chấm luôn lớn hơn số ký tự đứng trước @ ít nhất 2 đơn vị – tức là dauCham >= aCong + 2, ngược lại điều này thì email đó không hợp lệ, nói cách khác là: dauCham < aCong + 2
+
+Lệnh trên chúng ta đã ép phải tồn tại dấu chấm trong email, ngoài ra nó cũng buộc giữa dấu chấm cuối cùng và email phải có ít nhất 1 ký tự.
+
+ 
+Tiếp đến ta xem xét câu lệnh ngăn không cho dấu chấm là ký tự cuối cùng trong email.
+
+var dauCham = email.lastIndexOf(".");dauCham+2>email.length
+email.length xác định số ký tự của chuỗi email
+Sau dấu chấm cuối cùng phải có ít nhất 1 ký tự do vậy nếu dauCham + 2 > email.length nghĩa là email đó không hợp chuẩn.
+Categoriesjavascript
+Post navigation
+Cách dùng thẻ input để làm Form trong HTML5
+8 thuộc tính văn bản trong CSS: hiểu rõ nó sẽ giúp bạn rất nhiều đấy
+ 
+7 thoughts on “Tạo Form đăng ký bằng JavaScript và thẻ input”
+
+Lan phong
+May 18, 2014 at 3:25 am
+b ơi. code kiểm tra ngày tháng là ntn đấy b?
+khi nhập vào nó có thông báo là nhập sai định dạng ngày tháng ý.
+
+Reply
+ 
+ 
+
+Tuấn
+March 29, 2016 at 5:45 pm
+cho mình hỏi ràng buộc name phải lớn hơn 6 ký tự, với lại bài viết của a số điện thoại chỉ bắt là không để trống và bắt ký tự số, vậy muốn bắt nó phải là 10,11 chữ số làm sao a, thank trước!
+
+Reply
+
+admin
+April 20, 2016 at 2:12 pm
+Em thử tra bằng tiếng Anh các hàm Javascript đếm ký tự xem sao nhé.
+
+Reply
+
+nhã
+April 15, 2016 at 8:48 am
+ghi bài ko hề rõ .
+
+Reply
+
+toàn
+April 11, 2018 at 5:36 pm
+em cũng fpoly chuyên ngành web nè
+
+Reply
+
+Nguyễn Đức Anh
+April 11, 2018 at 11:37 pm
+Chào đồng môn. Học tốt nhé.
+
+Reply
+
+VL
+June 11, 2017 at 3:56 pm
+1 màu đen
+
+Reply
+ 
+Leave a Comment
+Comment
+
+Name
+Name *
+Email
+Email *
+
+Save my name, email, and website in this browser for the next time I comment.
+
+2021 © freehost.page | các công cụ miễn phí cho quản trị website | nhiều bài viết trong chuyên mục html, css, js, php, sql được dịch từ website W3Schools
